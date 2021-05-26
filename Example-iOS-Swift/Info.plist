@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Media library required for uploading image to Ready Player Me</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera required for image capture for Ready Player Me</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -47,6 +51,10 @@
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
+		<string>camera-flash</string>
+		<string>auto-focus-camera</string>
+		<string>front-facing-camera</string>
+		<string>still-camera</string>
 		<string>armv7</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
