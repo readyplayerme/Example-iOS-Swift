@@ -9,6 +9,12 @@ import UIKit
 import WebKit
 
 class ViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
+    
+    //Update to your custom URL here
+    let url = URL(string: "https://readyplayer.me/avatar")!
+    
+    let source = "window.addEventListener('message', function(event){ document.querySelector('.content').remove(); setTimeout(() => {window.webkit.messageHandlers.iosListener.postMessage(event.data);}, 1000) });"
+    
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let alert = UIAlertController(title: "Avatar URL Generated", message: "\(message.body)", preferredStyle: .alert)
             
@@ -24,7 +30,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHan
     
     override func loadView(){
         let config = WKWebViewConfiguration()
-        let source = "window.addEventListener('message', function(event){ document.querySelector('.content').remove(); setTimeout(() => {window.webkit.messageHandlers.iosListener.postMessage(event.data);}, 1000) });"
         let script = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
         config.userContentController.addUserScript(script)
         config.userContentController.add(self, name: "iosListener")
@@ -36,7 +41,6 @@ class ViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHan
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let url = URL(string: "https://readyplayer.me/")! //Update to your custom URL here
         webView.load(URLRequest(url: url))
         webView.allowsBackForwardNavigationGestures = true
     }
