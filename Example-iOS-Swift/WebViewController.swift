@@ -15,17 +15,17 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKScriptMessage
     
 
     var avatarUrlDelegate:WebViewDelegate?
+    var webView: WKWebView!
+    let cookieName = "rpm-uid"
     
     //Update to your custom URL here
-    let url = URL(string: "https://readyplayer.me/avatar")!
+    let readyPlayerMeUrl = URL(string: "https://readyplayer.me/avatar")!
     
     let source = "window.addEventListener('message', function(event){ document.querySelector('.content').remove(); setTimeout(() => {window.webkit.messageHandlers.iosListener.postMessage(event.data);}, 1000) });"
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         avatarUrlDelegate?.avatarUrlCallback(url : "\(message.body)")
     }
-    
-    var webView: WKWebView!
     
     override func loadView(){
         let config = WKWebViewConfiguration()
@@ -36,31 +36,34 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKScriptMessage
         webView.navigationDelegate = self
         view = webView
     }
-    
-//    func clearCacheAndCookies(){
-//        guard #available(iOS 9.0, *) else {return}
-//
-//        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-//
-//        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-//            records.forEach { record in
-//                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-//                #if DEBUG
-//                    print("WKWebsiteDataStore record deleted:", record)
-//                #endif
-//            }
-//        }
-//    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        webView.load(URLRequest(url: url))
+
         webView.allowsBackForwardNavigationGestures = true
+    }
+    
+    func reloadPage(clearHistory : Bool){
+        if(clearHistory){
+            WebCacheCleaner.clean()
+        }
+        webView.load(URLRequest(url: readyPlayerMeUrl))
     }
 
     func setCallback(delegate: WebViewDelegate){
         avatarUrlDelegate = delegate
-        print("TEST")
+    }
+    
+    func hasCookies() -> Bool {
+        var hasRpmCookies = false
+        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies() { cookies in
+            for cookie in cookies {
+                hasRpmCookies = cookie.name.contains(self.cookieName)
+                if(hasRpmCookies){
+                    break
+                }
+            }
+        }
+        return hasRpmCookies
     }
 }
