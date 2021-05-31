@@ -2,22 +2,70 @@
 //  ViewController.swift
 //  Example-iOS-Swift
 //
-//  Created by Wolf3D on 26/5/21.
+//  Created by Harrison Hough on 31/5/21.
 //
 
 import UIKit
 import WebKit
 
-class ViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
+class ViewController: UIViewController, WebViewDelegate {
     
-    //Update to your custom URL here
-    let url = URL(string: "https://readyplayer.me/avatar")!
+    let webViewControllerTag = 100
+    let webViewIdentifier = "WebViewController"
+    var controller = UIViewController()
     
-    let source = "window.addEventListener('message', function(event){ document.querySelector('.content').remove(); setTimeout(() => {window.webkit.messageHandlers.iosListener.postMessage(event.data);}, 1000) });"
+    @IBOutlet weak var editAvatarButton: UIButton!
     
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        let alert = UIAlertController(title: "Avatar URL Generated", message: "\(message.body)", preferredStyle: .alert)
-            
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        editAvatarButton?.isHidden = true
+        // Do any additional setup after loading the view.
+    }
+
+    @IBAction func onCreateNewAvatarAction(_ sender: Any) {
+        createWebView(clearHistory: true)
+    }
+    
+    @IBAction func onEditAvatarAction(_ sender: Any) {
+        createWebView(clearHistory: false)
+    }
+    
+    func createWebView(clearHistory : Bool){
+        if(clearHistory){
+            WebCacheCleaner.clean()
+        }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        controller = storyboard.instantiateViewController(withIdentifier: webViewIdentifier) as UIViewController
+
+        //let webViewController = controller as WebViewController
+        guard let webViewController = controller as? WebViewController else {
+            // uh oh, casting failed. maybe do some error handling.
+            return
+        }
+        webViewController.avatarUrlDelegate = self
+        
+        //add as a childviewcontroller
+        addChild(controller)
+
+        // Add the child's View as a subview
+        self.view.addSubview(controller.view)
+        controller.view.frame = view.bounds
+        controller.view.tag = webViewControllerTag
+        controller.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        // tell the childviewcontroller it's contained in it's parent
+        controller.didMove(toParent: self)
+    }
+    
+    func avatarUrlCallback(url: String){
+        showAlert(message: url)
+        destroyWebView()
+        editAvatarButton?.isHidden = false
+    }
+    
+    func showAlert(message: String){
+        let alert = UIAlertController(title: "Avatar URL Generated", message: message, preferredStyle: .alert)
+
              let okButton = UIAlertAction(title: "OK", style: .default, handler: { action in
              })
              alert.addAction(okButton)
@@ -26,25 +74,13 @@ class ViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHan
         })
     }
     
-    var webView: WKWebView!
-    
-    override func loadView(){
-        let config = WKWebViewConfiguration()
-        let script = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
-        config.userContentController.addUserScript(script)
-        config.userContentController.add(self, name: "iosListener")
-        webView = WKWebView(frame: UIScreen.main.bounds, configuration: config)
-        webView.navigationDelegate = self
-        view = webView
+    func destroyWebView(){
+        if let viewWithTag = self.view.viewWithTag(webViewControllerTag) {
+            
+            controller.dismiss(animated: true, completion: nil)
+            viewWithTag.removeFromSuperview()
+        }else{
+            print("No WebView to destroy!")
+        }
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        webView.load(URLRequest(url: url))
-        webView.allowsBackForwardNavigationGestures = true
-    }
-
-
 }
-
