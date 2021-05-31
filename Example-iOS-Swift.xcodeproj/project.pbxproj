@@ -192,6 +192,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1250;
+				ORGANIZATIONNAME = Wolf3D;
 				TargetAttributes = {
 					6168C99C265E6C1400754B47 = {
 						CreatedOnToolsVersion = 12.5;
