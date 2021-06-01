@@ -11,7 +11,7 @@ protocol WebViewDelegate {
     func avatarUrlCallback(url : String)
 }
 
-class WebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
+class WebViewController: UIViewController, WKScriptMessageHandler {
     
 
     var avatarUrlDelegate:WebViewDelegate?
@@ -23,24 +23,24 @@ class WebViewController: UIViewController, WKNavigationDelegate, WKScriptMessage
     
     let source = "window.addEventListener('message', function(event){ document.querySelector('.content').remove(); setTimeout(() => {window.webkit.messageHandlers.iosListener.postMessage(event.data);}, 1000) });"
     
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        avatarUrlDelegate?.avatarUrlCallback(url : "\(message.body)")
-    }
-    
     override func loadView(){
         let config = WKWebViewConfiguration()
         let script = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
         config.userContentController.addUserScript(script)
         config.userContentController.add(self, name: "iosListener")
         webView = WKWebView(frame: UIScreen.main.bounds, configuration: config)
-        webView.navigationDelegate = self
         view = webView
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         webView.allowsBackForwardNavigationGestures = true
+    }
+    
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        avatarUrlDelegate?.avatarUrlCallback(url : "\(message.body)")
+        reloadPage(clearHistory: false)
     }
     
     func reloadPage(clearHistory : Bool){

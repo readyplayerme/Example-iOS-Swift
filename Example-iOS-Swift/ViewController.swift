@@ -25,9 +25,10 @@ class ViewController: UIViewController, WebViewDelegate {
     }
 
     @IBAction func onCreateNewAvatarAction(_ sender: Any) {
-        WebCacheCleaner.clean()
-        webViewController.view.isHidden = false
+        destroyWebView()
+        createWebView()
         webViewController.reloadPage(clearHistory: true)
+        webViewController.view.isHidden = false
     }
     
     @IBAction func onEditAvatarAction(_ sender: Any) {
