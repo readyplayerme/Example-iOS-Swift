@@ -3,7 +3,7 @@
 
 This example showcases running Ready Player Me avatar creator website in native a iOS browser using  `WKWebview`.
 
-More details can be found at [swift iOS integration guides](https://docs.readyplayer.me/integration-guides/swift-ios).
+More details can be found at [Native iOS integration guides](https://docs.readyplayer.me/integration-guides/native-ios).
 
 ---
 
