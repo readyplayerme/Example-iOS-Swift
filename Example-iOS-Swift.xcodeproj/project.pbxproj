@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		611368732664FD420014A54E /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611368722664FD420014A54E /* WebViewController.swift */; };
+		61136875266503A50014A54E /* WebCacheCleaner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61136874266503A50014A54E /* WebCacheCleaner.swift */; };
 		6168C9A1265E6C1400754B47 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6168C9A0265E6C1400754B47 /* AppDelegate.swift */; };
 		6168C9A3265E6C1400754B47 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6168C9A2265E6C1400754B47 /* SceneDelegate.swift */; };
 		6168C9A5265E6C1400754B47 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6168C9A4265E6C1400754B47 /* ViewController.swift */; };
@@ -35,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		611368722664FD420014A54E /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		61136874266503A50014A54E /* WebCacheCleaner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebCacheCleaner.swift; sourceTree = "<group>"; };
 		6168C99D265E6C1400754B47 /* Example-iOS-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-iOS-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6168C9A0265E6C1400754B47 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6168C9A2265E6C1400754B47 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 				6168C9A9265E6C1600754B47 /* Assets.xcassets */,
 				6168C9AB265E6C1600754B47 /* LaunchScreen.storyboard */,
 				6168C9AE265E6C1600754B47 /* Info.plist */,
+				611368722664FD420014A54E /* WebViewController.swift */,
+				61136874266503A50014A54E /* WebCacheCleaner.swift */,
 			);
 			path = "Example-iOS-Swift";
 			sourceTree = "<group>";
@@ -260,8 +266,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				6168C9A5265E6C1400754B47 /* ViewController.swift in Sources */,
+				61136875266503A50014A54E /* WebCacheCleaner.swift in Sources */,
 				6168C9A1265E6C1400754B47 /* AppDelegate.swift in Sources */,
 				6168C9A3265E6C1400754B47 /* SceneDelegate.swift in Sources */,
+				611368732664FD420014A54E /* WebViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
