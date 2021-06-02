@@ -1,7 +1,7 @@
 
 # Ready Player Me Webview Swift iOS Example
 
-This example showcases running Ready Player Me avatar creator website in native a iOS browser using  `WKWebview`.
+This example showcases running Ready Player Me avatar creator website inside a native iOS application using  `WKWebview`.
 
 More details can be found at [Native iOS integration guides](https://docs.readyplayer.me/integration-guides/native-ios).
 
