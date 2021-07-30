@@ -19,7 +19,7 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     let cookieName = "rpm-uid"
     
     //Update to your custom URL here
-    let readyPlayerMeUrl = URL(string: "https://readyplayer.me/avatar")!
+    let readyPlayerMeUrl = URL(string: "https://demo.readyplayer.me/avatar")!
     
     let source = "window.addEventListener('message', function(event){ document.querySelector('.content').remove(); setTimeout(() => {window.webkit.messageHandlers.iosListener.postMessage(event.data);}, 1000) });"
     
