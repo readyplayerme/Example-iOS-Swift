@@ -21,7 +21,7 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     //Update to your custom URL here
     let readyPlayerMeUrl = URL(string: "https://demo.readyplayer.me/avatar")!
     
-    let source = "window.addEventListener('message', function(event){ document.querySelector('.content').remove(); setTimeout(() => {window.webkit.messageHandlers.iosListener.postMessage(event.data);}, 1000) });"
+    let source = "window.addEventListener('message', function(event){ window.webkit.messageHandlers.iosListener.postMessage(event.data);});"
     
     override func loadView(){
         let config = WKWebViewConfiguration()
@@ -39,8 +39,14 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        avatarUrlDelegate?.avatarUrlCallback(url : "\(message.body)")
-        reloadPage(clearHistory: false)
+        let body = message.body
+        if let payloadDictionary = body as? Dictionary<String, AnyObject> {
+            if let readyPlayerMeDictionary = payloadDictionary["readyPlayerMe"] as? Dictionary<String, AnyObject>{
+                print (readyPlayerMeDictionary["stickers"])
+                avatarUrlDelegate?.avatarUrlCallback(url : String(describing: readyPlayerMeDictionary["stickers"]))
+                reloadPage(clearHistory: false)
+            }
+        }
     }
     
     func reloadPage(clearHistory : Bool){
