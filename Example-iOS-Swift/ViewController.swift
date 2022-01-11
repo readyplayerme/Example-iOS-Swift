@@ -49,7 +49,7 @@ class ViewController: UIViewController, WebViewDelegate {
         addChild(controller)
 
         self.view.addSubview(controller.view)
-        controller.view.frame = view.safeAreaLayoutGuide.layoutFrame
+        controller.view.frame = view.bounds
         controller.view.tag = webViewControllerTag
         controller.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         controller.didMove(toParent: self)

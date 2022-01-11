@@ -28,7 +28,7 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
         let script = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
         config.userContentController.addUserScript(script)
         config.userContentController.add(self, name: "iosListener")
-        webView = WKWebView(frame: .zero, configuration: config)
+        webView = WKWebView(frame: UIScreen.main.bounds, configuration: config)
         view = webView
     }
     
