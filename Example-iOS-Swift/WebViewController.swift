@@ -6,6 +6,7 @@
 //
 import UIKit
 import WebKit
+import Foundation
 
 protocol WebViewDelegate {
     func avatarUrlCallback(url : String)
@@ -21,11 +22,43 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     //Update to your custom URL here
     let readyPlayerMeUrl = URL(string: "https://demo.readyplayer.me/avatar")!
     
-    let source = "window.addEventListener('message', function(event){window.webkit.messageHandlers.iosListener.postMessage(event.data);});"
+        let source = """
+            window.addEventListener('message', function(event){
+                const json = parse(event)
+
+                if (json?.source !== 'readyplayerme') {
+                  return
+                }
+
+                // Susbribe to all events sent from Ready Player Me once frame is ready
+                if (json.eventName === 'v1.frame.ready') {
+                  window.postMessage(
+                    JSON.stringify({
+                      target: 'readyplayerme',
+                      type: 'subscribe',
+                      eventName: 'v1.**'
+                    }),
+                    '*'
+                  );
+                }
+
+                window.webkit.messageHandlers.iosListener.postMessage(event.data);
+
+
+                function parse(event) {
+                    try {
+                        return JSON.parse(event.data)
+                    } catch (error) {
+                        return null
+                    }
+                };
+            });
+        """
     
     override func loadView(){
+        
         let config = WKWebViewConfiguration()
-        let script = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+        let script = WKUserScript(source: source, injectionTime: .atDocumentStart, forMainFrameOnly: false)
         config.userContentController.addUserScript(script)
         config.userContentController.add(self, name: "iosListener")
         webView = WKWebView(frame: .zero, configuration: config)
@@ -38,26 +71,32 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
         webView.allowsBackForwardNavigationGestures = true
     }
     
+    struct MessageData: Decodable {
+        let source: String?
+        let eventName: String?
+        let data: Dictionary<String, String>?
+    }
+    
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        let body = message.body
         
-        if let payloadDictionary = body as? Dictionary<String, AnyObject> {
-            if let readyPlayerMeDictionary = payloadDictionary["readyPlayerMe"] as? Dictionary<String, AnyObject>{
-                if (readyPlayerMeDictionary["name"] as! String == "avatarExported") {
-                    if let readyPlayerMeData = readyPlayerMeDictionary["data"] as? Dictionary<String, AnyObject>{
-                    avatarUrlDelegate?.avatarUrlCallback(url : String(describing: readyPlayerMeData["avatarUrl"]!))
+        if let body = message.body as? String{
+            let jsonData = body.data(using: .utf8)
+            
+            if let bodyStruct = try? JSONDecoder().decode(MessageData.self, from: jsonData!){
+                print("bodyStruct = \(bodyStruct)")
+                if(bodyStruct.eventName == "v1.avatar.exported")
+                {
+                    avatarUrlDelegate?.avatarUrlCallback(url : "\(String(describing: bodyStruct.data?["url"]))")
                     reloadPage(clearHistory: false)
-                    }
                 }
             }
-            return
-        }
-        else {
-            let url = body as? String
-            if (url!.contains("glb")){
-                avatarUrlDelegate?.avatarUrlCallback(url : "\(body)")
-                reloadPage(clearHistory: false)
-            }
+            
+//            Old postMessaging system
+//            let url = body as? String
+//            if (url!.contains("glb")){
+//                avatarUrlDelegate?.avatarUrlCallback(url : "\(body)")
+//                reloadPage(clearHistory: false)
+//            }
         }
     }
     
