@@ -21,10 +21,9 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     var subscriptionCreated = false
     
     //Update to your custom URL here
-    //let readyPlayerMeUrl = URL(string: "https://demo.readyplayer.me/avatar")!
-    let readyPlayerMeUrl = URL(string: "https://demo.develop.readyplayer.me/avatar?frameApi")!
+    let readyPlayerMeUrl = URL(string: "https://demo.readyplayer.me/avatar?frameApi")!
     
-        let source = """
+    let source = """
             window.addEventListener('message', function(event){
                 const json = parse(event)
         
