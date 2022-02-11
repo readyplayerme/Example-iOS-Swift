@@ -18,16 +18,23 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     var avatarUrlDelegate:WebViewDelegate?
     var webView: WKWebView!
     let cookieName = "rpm-uid"
+    var subscriptionCreated = false
     
     //Update to your custom URL here
-    let readyPlayerMeUrl = URL(string: "https://demo.readyplayer.me/avatar")!
+    //let readyPlayerMeUrl = URL(string: "https://demo.readyplayer.me/avatar")!
+    let readyPlayerMeUrl = URL(string: "https://demo.develop.readyplayer.me/avatar?frameApi")!
     
         let source = """
             window.addEventListener('message', function(event){
                 const json = parse(event)
+        
+                if(event.data.includes('.glb')){
+                    window.webkit.messageHandlers.iosListener.postMessage(event.data);
+                    return;
+                }
 
                 if (json?.source !== 'readyplayerme') {
-                  return
+                  return;
                 }
 
                 // Susbribe to all events sent from Ready Player Me once frame is ready
@@ -80,23 +87,28 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
         if let body = message.body as? String{
+            
             let jsonData = body.data(using: .utf8)
             
             if let bodyStruct = try? JSONDecoder().decode(MessageData.self, from: jsonData!){
-                print("bodyStruct = \(bodyStruct)")
-                if(bodyStruct.eventName == "v1.avatar.exported")
-                {
+                switch bodyStruct.eventName {
+                case "v1.avatar.exported":
                     avatarUrlDelegate?.avatarUrlCallback(url : "\(String(describing: bodyStruct.data?["url"]))")
+                    reloadPage(clearHistory: false)
+                case "v1.subscription.created":
+                    subscriptionCreated = true
+                default:
+                    print("Default event. bodyStruct = \(bodyStruct)")
+                }
+            }
+            else if (!subscriptionCreated) {
+                if (body.contains("glb")){
+                    avatarUrlDelegate?.avatarUrlCallback(url : "\(body)")
                     reloadPage(clearHistory: false)
                 }
             }
             
-//            Old postMessaging system
-//            let url = body as? String
-//            if (url!.contains("glb")){
-//                avatarUrlDelegate?.avatarUrlCallback(url : "\(body)")
-//                reloadPage(clearHistory: false)
-//            }
+
         }
     }
     
