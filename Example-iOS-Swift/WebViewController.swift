@@ -19,9 +19,9 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     var webView: WKWebView!
     let cookieName = "rpm-uid"
     var subscriptionCreated = false
-    
+    //Update to your subdomain URL here
+    let subdomain = "demo"
     //Update to your custom URL here
-    let readyPlayerMeUrl = URL(string: "https://demo.readyplayer.me/avatar?frameApi")!
     
     let source = """
             window.addEventListener('message', function(event){
@@ -112,10 +112,11 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     func reloadPage(clearHistory : Bool){
+        let url = URL(string: "https://\(subdomain).readyplayer.me/avatar?frameApi")!
         if(clearHistory){
             WebCacheCleaner.clean()
         }
-        webView.load(URLRequest(url: readyPlayerMeUrl))
+        webView.load(URLRequest(url: url))
     }
 
     func setCallback(delegate: WebViewDelegate){
