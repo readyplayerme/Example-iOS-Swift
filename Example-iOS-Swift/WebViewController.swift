@@ -21,13 +21,12 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     var subscriptionCreated = false
     //Update to your subdomain URL here
     let subdomain = "demo"
-    //Update to your custom URL here
     
     let source = """
             window.addEventListener('message', function(event){
                 const json = parse(event)
         
-                if(event.data.includes('.glb')){
+                if(event.data.endsWith('.glb')){
                     window.webkit.messageHandlers.iosListener.postMessage(event.data);
                     return;
                 }
@@ -36,7 +35,7 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
                   return;
                 }
 
-                // Susbribe to all events sent from Ready Player Me once frame is ready
+                // Susbcribe to all events sent from Ready Player Me once frame is ready
                 if (json.eventName === 'v1.frame.ready') {
                   window.postMessage(
                     JSON.stringify({
@@ -101,7 +100,7 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
                 }
             }
             else if (!subscriptionCreated) {
-                if (body.contains("glb")){
+                if (body.hasSuffix("glb")){
                     avatarUrlDelegate?.avatarUrlCallback(url : "\(body)")
                     reloadPage(clearHistory: false)
                 }
