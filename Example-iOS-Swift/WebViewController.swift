@@ -25,11 +25,6 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     let source = """
             window.addEventListener('message', function(event){
                 const json = parse(event)
-        
-                if(event.data.endsWith('.glb')){
-                    window.webkit.messageHandlers.iosListener.postMessage(event.data);
-                    return;
-                }
 
                 if (json?.source !== 'readyplayerme') {
                   return;
@@ -91,22 +86,14 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
             if let bodyStruct = try? JSONDecoder().decode(MessageData.self, from: jsonData!){
                 switch bodyStruct.eventName {
                 case "v1.avatar.exported":
-                    avatarUrlDelegate?.avatarUrlCallback(url : "\(String(describing: bodyStruct.data?["url"]))")
+                    avatarUrlDelegate?.avatarUrlCallback(url : bodyStruct.data!["url"]!)
                     reloadPage(clearHistory: false)
                 case "v1.subscription.created":
                     subscriptionCreated = true
                 default:
-                    print("Default event. bodyStruct = \(bodyStruct)")
+                    print("Default event. \(bodyStruct)")
                 }
             }
-            else if (!subscriptionCreated) {
-                if (body.hasSuffix("glb")){
-                    avatarUrlDelegate?.avatarUrlCallback(url : "\(body)")
-                    reloadPage(clearHistory: false)
-                }
-            }
-            
-
         }
     }
     
