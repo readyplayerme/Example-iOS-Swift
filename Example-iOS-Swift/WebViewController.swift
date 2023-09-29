@@ -22,8 +22,6 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     var webView: WKWebView!
     let cookieName = "rpm-uid"
     var subscriptionCreated = false
-    //Update to your subdomain URL here
-    let subdomain = "demo"
     
     let source = """
             window.addEventListener('message', function(event){
@@ -115,7 +113,8 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     func reloadPage(clearHistory : Bool){
-        let url = URL(string: "https://\(subdomain).readyplayer.me/avatar?frameApi")!
+        let url = AvatarCreatorSettings().generateUrl();
+        
         if(clearHistory){
             WebCacheCleaner.clean()
         }
