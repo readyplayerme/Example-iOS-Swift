@@ -9,7 +9,7 @@ class AvatarExportedEvent {
     var url: String
     
     init (url: String) {
-        self.url = url;
+        self.url = url
     }
 }
 
@@ -43,6 +43,6 @@ class UserUpdatedEvent {
     var id: String
     
     init (id: String) {
-        self.id = id;
+        self.id = id
     }
 }
