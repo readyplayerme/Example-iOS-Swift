@@ -13,6 +13,8 @@ protocol WebViewDelegate {
     func onAssetUnlocked(event: AssetUnlockedEvent)
     func onUserSet(event: UserSetEvent)
     func onUserAuthorized(event: UserAuthorizedEvent)
+    func onUserUpdated(event: UserUpdatedEvent)
+    func onUserLoggedOut()
 }
 
 class WebViewController: UIViewController, WKScriptMessageHandler {
@@ -95,8 +97,13 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
                 case "v1.user.set":
                     let event = UserSetEvent (id: bodyStruct.data!["id"]!)
                     webViewDelegate?.onUserSet(event: event)
+                case "v1.user.updated":
+                    let event = UserUpdatedEvent (id: bodyStruct.data!["id"]!)
+                    webViewDelegate?.onUserUpdated(event: event)
+                case "v1.user.logout":
+                    webViewDelegate?.onUserLoggedOut()
                 case "v1.user.authorized":
-                    let event = UserAuthorizedEvent (url: bodyStruct.data!["url"]!)
+                    let event = UserAuthorizedEvent (id: bodyStruct.data!["id"]!)
                     webViewDelegate?.onUserAuthorized(event: event)
                 case "v1.subscription.created":
                     subscriptionCreated = true

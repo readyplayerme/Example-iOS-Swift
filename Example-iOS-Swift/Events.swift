@@ -32,10 +32,17 @@ class UserSetEvent {
 }
 
 class UserAuthorizedEvent {
-    var url: String
+    var id: String
     
-    init (url: String) {
-        self.url = url
+    init (id: String) {
+        self.id = id
     }
 }
 
+class UserUpdatedEvent {
+    var id: String
+    
+    init (id: String) {
+        self.id = id;
+    }
+}
