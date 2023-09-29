@@ -38,7 +38,7 @@ enum Gender: String {
 }
 
 struct AvatarCreatorConfig {
-    // Update to your subdomain URL here
+    // Update your subdomain URL here
     var subdomain: String = "demo"
     var clearCache: Bool = false
     var quickStart: Bool = false
