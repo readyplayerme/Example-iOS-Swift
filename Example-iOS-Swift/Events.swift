@@ -3,7 +3,7 @@
 //  Example-iOS-Swift
 //
 //  Created by Max Andreassen on 28/09/2023.
-//  Copyright © 2023 Wolf3D. All rights reserved.
+//  Copyright © 2023 Ready Player Me. All rights reserved.
 //
 class AvatarExportedEvent {
     var url: String
