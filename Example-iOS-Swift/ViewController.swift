@@ -44,7 +44,7 @@ class ViewController: UIViewController, WebViewDelegate {
             return
         }
         webViewController = viewController
-        webViewController.avatarUrlDelegate = self
+        webViewController.webViewDelegate = self
         
         addChild(controller)
 
@@ -55,14 +55,34 @@ class ViewController: UIViewController, WebViewDelegate {
         controller.didMove(toParent: self)
     }
     
-    func avatarUrlCallback(url: String){
-        showAlert(message: url)
+    func onAvatarExported(event: AvatarExportedEvent) {
+        showAlert(message: event.url)
         webViewController.view.isHidden = true
         editAvatarButton?.isHidden = false
     }
     
+    func onAssetUnlocked(event: AssetUnlockedEvent) {
+        showAlert(message: "Asset \(event.assetId) unlocked for user \(event.userId)")
+    }
+    
+    func onUserSet(event: UserSetEvent) {
+        showAlert(message: "User set:  \(event.id)")
+    }
+    
+    func onUserAuthorized(event: UserAuthorizedEvent) {
+        showAlert(message: "User authorized: \(event.id)")
+    }
+    
+    func onUserUpdated(event: UserUpdatedEvent) {
+        showAlert(message: "User updated: \(event.id)")
+    }
+    
+    func onUserLoggedOut() {
+        showAlert(message: "Logged out.")
+    }
+    
     func showAlert(message: String){
-        let alert = UIAlertController(title: "Avatar URL Generated", message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Event Received", message: message, preferredStyle: .alert)
 
              let okButton = UIAlertAction(title: "OK", style: .default, handler: { action in
              })

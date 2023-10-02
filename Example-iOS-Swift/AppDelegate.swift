@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  Example-iOS-Swift
 //
-//  Created by Wolf3D on 26/5/21.
+//  Created by Ready Player Me on 26/5/21.
 //
 
 import UIKit
