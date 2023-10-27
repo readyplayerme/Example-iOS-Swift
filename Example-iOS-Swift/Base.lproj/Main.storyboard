@@ -29,30 +29,28 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Ready Player Me " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c58-oT-izA">
-                                <rect key="frame" x="140" y="202" width="131" height="21"/>
+                                <rect key="frame" x="142" y="109" width="131" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CNZ-xq-n3R" userLabel="Edit Avatar Button">
-                                <rect key="frame" x="117" y="790" width="180" height="51"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <color key="tintColor" systemColor="labelColor"/>
-                                <state key="normal" title="Update Avatar" backgroundImage="rectangle.fill" catalog="system">
-                                    <color key="titleColor" systemColor="secondarySystemBackgroundColor"/>
-                                </state>
-                                <connections>
-                                    <action selector="onEditAvatarAction:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="DkJ-67-vzW"/>
-                                </connections>
-                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="person.crop.artframe" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="LCY-Ae-M9l" userLabel="Avatar Image">
+                                <rect key="frame" x="87" y="279" width="240" height="240"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="nkN-vJ-Ju0" userLabel="Avatar Loading Indicator">
+                                <rect key="frame" x="160" y="574" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="K2a-cO-tOx"/>
                     <connections>
-                        <outlet property="editAvatarButton" destination="CNZ-xq-n3R" id="Sz0-U8-hHI"/>
+                        <outlet property="avatarImage" destination="LCY-Ae-M9l" id="yJZ-Dq-mnY"/>
+                        <outlet property="avatarLoadingIndicator" destination="nkN-vJ-Ju0" id="fNr-Hl-VLd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -85,6 +83,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="person.crop.artframe" catalog="system" width="115" height="128"/>
         <image name="rectangle.fill" catalog="system" width="128" height="93"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
