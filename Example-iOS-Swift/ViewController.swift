@@ -9,19 +9,19 @@ import UIKit
 import WebKit
 
 class ViewController: UIViewController, WebViewDelegate {
-    
     let webViewControllerTag = 100
     let webViewIdentifier = "WebViewController"
     var webViewController = WebViewController()
     
-    @IBOutlet weak var editAvatarButton: UIButton!
+    @IBOutlet weak var avatarImage: UIImageView!
+    @IBOutlet weak var avatarLoadingIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         createWebView()
-        editAvatarButton.isHidden = true
         webViewController.view.isHidden = true
-        editAvatarButton.isHidden = !webViewController.hasCookies()
+        self.avatarLoadingIndicator.isHidden = true
+        self.avatarLoadingIndicator.startAnimating()
     }
 
     @IBAction func onCreateNewAvatarAction(_ sender: Any) {
@@ -44,7 +44,7 @@ class ViewController: UIViewController, WebViewDelegate {
             return
         }
         webViewController = viewController
-        webViewController.avatarUrlDelegate = self
+        webViewController.webViewDelegate = self
         
         addChild(controller)
 
@@ -54,15 +54,55 @@ class ViewController: UIViewController, WebViewDelegate {
         controller.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         controller.didMove(toParent: self)
     }
-    
-    func avatarUrlCallback(url: String){
-        showAlert(message: url)
+
+    func onAvatarExported(event: AvatarExportedEvent) {
+        renderAvatar(url: event.url)
         webViewController.view.isHidden = true
-        editAvatarButton?.isHidden = false
+    }
+    
+    func onAssetUnlocked(event: AssetUnlockedEvent) {
+        showAlert(message: "Asset \(event.assetId) unlocked for user \(event.userId)")
+    }
+    
+    func onUserSet(event: UserSetEvent) {
+        showAlert(message: "User set:  \(event.id)")
+    }
+    
+    func onUserAuthorized(event: UserAuthorizedEvent) {
+        showAlert(message: "User authorized: \(event.id)")
+    }
+    
+    func onUserUpdated(event: UserUpdatedEvent) {
+        showAlert(message: "User updated: \(event.id)")
+    }
+    
+    func onUserLoggedOut() {
+        showAlert(message: "Logged out.")
+    }
+    
+    func renderAvatar(url: String) {
+        if (url.isEmpty) {
+            return
+        }
+    
+        let avatar2dRenderUrl = Avatar2DRenderSettings().generateUrl(avatarUrl: url);
+        
+        self.avatarLoadingIndicator.isHidden = false;
+            
+        let task = URLSession.shared.dataTask(with: avatar2dRenderUrl) { [weak self] (data, _, _) in
+            if let data = data {
+                DispatchQueue.main.async {
+                    self?.avatarImage.image = UIImage(data: data)
+                    self?.avatarLoadingIndicator.isHidden = true;
+                }
+            }
+        }
+                
+        task.resume();
     }
     
     func showAlert(message: String){
-        let alert = UIAlertController(title: "Avatar URL Generated", message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: "Event Received", message: message, preferredStyle: .alert)
 
              let okButton = UIAlertAction(title: "OK", style: .default, handler: { action in
              })

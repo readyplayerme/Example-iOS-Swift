@@ -2,25 +2,26 @@
 //  ViewController.swift
 //  Example-iOS-Swift
 //
-//  Created by Wolf3D on 26/5/21.
+//  Created by Ready Player Me on 26/5/21.
 //
 import UIKit
 import WebKit
 import Foundation
 
 protocol WebViewDelegate {
-    func avatarUrlCallback(url : String)
+    func onAvatarExported(event: AvatarExportedEvent)
+    func onAssetUnlocked(event: AssetUnlockedEvent)
+    func onUserSet(event: UserSetEvent)
+    func onUserAuthorized(event: UserAuthorizedEvent)
+    func onUserUpdated(event: UserUpdatedEvent)
+    func onUserLoggedOut()
 }
 
 class WebViewController: UIViewController, WKScriptMessageHandler {
-    
-
-    var avatarUrlDelegate:WebViewDelegate?
+    var webViewDelegate:WebViewDelegate?
     var webView: WKWebView!
     let cookieName = "rpm-uid"
     var subscriptionCreated = false
-    //Update to your subdomain URL here
-    let subdomain = "demo"
     
     let source = """
             window.addEventListener('message', function(event){
@@ -78,16 +79,30 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        
         if let body = message.body as? String{
-            
             let jsonData = body.data(using: .utf8)
             
-            if let bodyStruct = try? JSONDecoder().decode(MessageData.self, from: jsonData!){
+            if let bodyStruct = try? JSONDecoder().decode(MessageData.self, from: jsonData!) {
                 switch bodyStruct.eventName {
                 case "v1.avatar.exported":
-                    avatarUrlDelegate?.avatarUrlCallback(url : bodyStruct.data!["url"]!)
+                    let event = AvatarExportedEvent (url: bodyStruct.data!["url"]!)
+                    webViewDelegate?.onAvatarExported(event: event)
                     reloadPage(clearHistory: false)
+                case "v1.asset.unlock":
+                    let event = AssetUnlockedEvent (userId: bodyStruct.data!["userId"]!,
+                                                    assetId: bodyStruct.data!["assetId"]!)
+                    webViewDelegate?.onAssetUnlocked(event: event)
+                case "v1.user.set":
+                    let event = UserSetEvent (id: bodyStruct.data!["id"]!)
+                    webViewDelegate?.onUserSet(event: event)
+                case "v1.user.updated":
+                    let event = UserUpdatedEvent (id: bodyStruct.data!["id"]!)
+                    webViewDelegate?.onUserUpdated(event: event)
+                case "v1.user.logout":
+                    webViewDelegate?.onUserLoggedOut()
+                case "v1.user.authorized":
+                    let event = UserAuthorizedEvent (id: bodyStruct.data!["id"]!)
+                    webViewDelegate?.onUserAuthorized(event: event)
                 case "v1.subscription.created":
                     subscriptionCreated = true
                 default:
@@ -98,15 +113,12 @@ class WebViewController: UIViewController, WKScriptMessageHandler {
     }
     
     func reloadPage(clearHistory : Bool){
-        let url = URL(string: "https://\(subdomain).readyplayer.me/avatar?frameApi")!
+        let url = AvatarCreatorSettings().generateUrl();
+        
         if(clearHistory){
             WebCacheCleaner.clean()
         }
         webView.load(URLRequest(url: url))
-    }
-
-    func setCallback(delegate: WebViewDelegate){
-        avatarUrlDelegate = delegate
     }
     
     func hasCookies() -> Bool {
