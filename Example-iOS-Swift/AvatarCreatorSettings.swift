@@ -66,7 +66,7 @@ class AvatarCreatorSettings {
             url += "\(config.language.rawValue)/"
         }
         
-        url += "avatar?frameApi"
+        url += "avatar?frameApi&source=ios-swift-avatar-creator"
         
         if (config.clearCache) {
             url += "&clearCache"
