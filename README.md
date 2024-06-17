@@ -17,4 +17,4 @@ More details can be found at [Native iOS integration guides](https://docs.readyp
 Do you want to add Ready Player Me avatars to your own app or game? [Learn how to become a Partner](https://docs.readyplayer.me/for-partners/become-a-partner).
 
 ### Community
-Get in touch with the Ready Player Me community over at our [Discord](https://discord.gg/readyplayerme).
+Get in touch with the Ready Player Me community over at our [Forums](https://forum.readyplayer.me/).
